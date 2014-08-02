@@ -647,7 +647,7 @@ static void ob_q_free(nghttp2_outbound_queue *q, nghttp2_mem *mem) {
 static int inflight_settings_new(nghttp2_inflight_settings **settings_ptr,
                                  const nghttp2_settings_entry *iv, size_t niv,
                                  nghttp2_mem *mem) {
-  *settings_ptr = nghttp2_mem_malloc(mem, sizeof(nghttp2_inflight_settings));
+  *settings_ptr = (nghttp2_inflight_settings *)nghttp2_mem_malloc(mem, sizeof(nghttp2_inflight_settings));
   if (!*settings_ptr) {
     return NGHTTP2_ERR_NOMEM;
   }
@@ -2302,7 +2302,7 @@ nghttp2_session_get_next_ob_item(nghttp2_session *session) {
   }
 
   if (session->remote_window_size > 0) {
-    return nghttp2_stream_next_outbound_item(&session->root);
+    return (nghttp2_outbound_item *)nghttp2_stream_next_outbound_item(&session->root);
   }
 
   return NULL;

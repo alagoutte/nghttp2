@@ -672,9 +672,9 @@ static int send_data_callback(nghttp2_session *session _U_,
                               nghttp2_frame *frame, const uint8_t *framehd,
                               size_t length, nghttp2_data_source *source,
                               void *user_data) {
-  connection *conn = user_data;
+  connection *conn = (connection *)user_data;
   uint8_t *p = conn->buf.last;
-  stream *strm = source->ptr;
+  stream *strm = (stream *)source->ptr;
 
   /* We never use padding in this program */
   assert(frame->data.padlen == 0);
@@ -708,7 +708,7 @@ static ssize_t fd_read_callback(nghttp2_session *session _U_,
                                 size_t length, uint32_t *data_flags,
                                 nghttp2_data_source *source,
                                 void *user_data _U_) {
-  stream *strm = source->ptr;
+  stream *strm = (stream *)source->ptr;
   ssize_t nread =
       (int64_t)length < strm->fileleft ? (int64_t)length : strm->fileleft;
 

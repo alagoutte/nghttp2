@@ -9417,7 +9417,7 @@ static void check_nghttp2_http_recv_headers_fail(
   mem = nghttp2_mem_default();
   frame_pack_bufs_init(&bufs);
 
-  ud = session->user_data;
+  ud = (my_user_data *)session->user_data;
 
   if (stream_state != -1) {
     if (nghttp2_session_is_my_stream_id(session, stream_id)) {
