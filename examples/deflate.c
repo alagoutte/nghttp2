@@ -116,7 +116,7 @@ static void deflate(nghttp2_hd_deflater *deflater,
   }
 
   buflen = nghttp2_hd_deflate_bound(deflater, nva, nvlen);
-  buf = malloc(buflen);
+  buf = (uint8_t *)malloc(buflen);
 
   rv = nghttp2_hd_deflate_hd(deflater, buf, buflen, nva, nvlen);
 

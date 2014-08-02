@@ -39,7 +39,7 @@ static string_entry *string_entry_new(const char *s) {
 
   mem = nghttp2_mem_default();
 
-  ent = nghttp2_mem_malloc(mem, sizeof(string_entry));
+  ent = (string_entry *)nghttp2_mem_malloc(mem, sizeof(string_entry));
   ent->s = s;
 
   return ent;

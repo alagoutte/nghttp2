@@ -33,12 +33,12 @@ int nghttp2_rcbuf_new(nghttp2_rcbuf **rcbuf_ptr, size_t size,
                       nghttp2_mem *mem) {
   uint8_t *p;
 
-  p = nghttp2_mem_malloc(mem, sizeof(nghttp2_rcbuf) + size);
+  p = (uint8_t *)nghttp2_mem_malloc(mem, sizeof(nghttp2_rcbuf) + size);
   if (p == NULL) {
     return NGHTTP2_ERR_NOMEM;
   }
 
-  *rcbuf_ptr = (void *)p;
+  *rcbuf_ptr = (nghttp2_rcbuf *)(void *)p;
 
   (*rcbuf_ptr)->mem_user_data = mem->mem_user_data;
   (*rcbuf_ptr)->free = mem->free;

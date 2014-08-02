@@ -117,7 +117,7 @@ struct URI {
  */
 static char *strcopy(const char *s, size_t len) {
   char *dst;
-  dst = malloc(len + 1);
+  dst = (char *)malloc(len + 1);
   memcpy(dst, s, len);
   dst[len] = '\0';
   return dst;
@@ -245,7 +245,7 @@ static int on_frame_recv_callback(nghttp2_session *session,
     if (frame->headers.cat == NGHTTP2_HCAT_RESPONSE) {
       const nghttp2_nv *nva = frame->headers.nva;
       struct Request *req;
-      req = nghttp2_session_get_stream_user_data(session, frame->hd.stream_id);
+      req = (struct Request *)nghttp2_session_get_stream_user_data(session, frame->hd.stream_id);
       if (req) {
         printf("[INFO] C <---------------------------- S (HEADERS)\n");
         for (i = 0; i < frame->headers.nvlen; ++i) {
@@ -273,11 +273,11 @@ static int on_frame_recv_callback(nghttp2_session *session,
  * fetch 1 resource in this program, after reception of the response,
  * we submit GOAWAY and close the session.
  */
-static int on_stream_close_callback(nghttp2_session *session, int32_t stream_id,
+static int on_stream_close_callback(nghttp2_session *session, int32_t stream_id _U_,
                                     uint32_t error_code _U_,
                                     void *user_data _U_) {
   struct Request *req;
-  req = nghttp2_session_get_stream_user_data(session, stream_id);
+  req = (struct Request *)nghttp2_session_get_stream_user_data(session, stream_id);
   if (req) {
     int rv;
     rv = nghttp2_session_terminate_session(session, NGHTTP2_NO_ERROR);
@@ -298,7 +298,7 @@ static int on_data_chunk_recv_callback(nghttp2_session *session,
                                        const uint8_t *data, size_t len,
                                        void *user_data _U_) {
   struct Request *req;
-  req = nghttp2_session_get_stream_user_data(session, stream_id);
+  req = (struct Request *)nghttp2_session_get_stream_user_data(session, stream_id);
   if (req) {
     printf("[INFO] C <---------------------------- S (DATA chunk)\n"
            "%lu bytes\n",

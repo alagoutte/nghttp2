@@ -78,7 +78,7 @@ int nghttp2_pq_push(nghttp2_pq *pq, nghttp2_pq_entry *item) {
       return NGHTTP2_ERR_NOMEM;
     }
     pq->capacity = ncapacity;
-    pq->q = nq;
+    pq->q = (nghttp2_pq_entry **)nq;
   }
   pq->q[pq->length] = item;
   item->index = pq->length;

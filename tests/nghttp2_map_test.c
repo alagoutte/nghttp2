@@ -146,7 +146,7 @@ void test_nghttp2_map_functional(void) {
 }
 
 static int entry_free(nghttp2_map_entry *entry, void *ptr) {
-  nghttp2_mem *mem = ptr;
+  nghttp2_mem *mem = (nghttp2_mem *)ptr;
 
   mem->free(entry, NULL);
   return 0;
@@ -154,10 +154,10 @@ static int entry_free(nghttp2_map_entry *entry, void *ptr) {
 
 void test_nghttp2_map_each_free(void) {
   nghttp2_mem *mem = nghttp2_mem_default();
-  strentry *foo = mem->malloc(sizeof(strentry), NULL),
-           *bar = mem->malloc(sizeof(strentry), NULL),
-           *baz = mem->malloc(sizeof(strentry), NULL),
-           *shrubbery = mem->malloc(sizeof(strentry), NULL);
+  strentry *foo = (strentry *)mem->malloc(sizeof(strentry), NULL),
+           *bar = (strentry *)mem->malloc(sizeof(strentry), NULL),
+           *baz = (strentry *)mem->malloc(sizeof(strentry), NULL),
+           *shrubbery = (strentry *)mem->malloc(sizeof(strentry), NULL);
   nghttp2_map map;
   nghttp2_map_init(&map, nghttp2_mem_default());
 

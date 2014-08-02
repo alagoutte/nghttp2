@@ -98,7 +98,7 @@ json_t *dump_inflate_header_table(nghttp2_hd_inflater *inflater) {
 json_t *dump_header(const uint8_t *name, size_t namelen, const uint8_t *value,
                     size_t valuelen) {
   json_t *nv_pair = json_object();
-  char *cname = malloc(namelen + 1);
+  char *cname = (char *)malloc(namelen + 1);
   if (cname == NULL) {
     return NULL;
   }

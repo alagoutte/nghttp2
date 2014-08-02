@@ -424,7 +424,7 @@ static ssize_t pack_extension_callback(nghttp2_session *session _U_,
                                        uint8_t *buf, size_t len _U_,
                                        const nghttp2_frame *frame,
                                        void *user_data _U_) {
-  nghttp2_buf *p = frame->ext.payload;
+  nghttp2_buf *p = (nghttp2_buf *)frame->ext.payload;
 
   memcpy(buf, p->pos, nghttp2_buf_len(p));
 
@@ -614,7 +614,7 @@ void test_nghttp2_session_recv_invalid_stream_id(void) {
 
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
   callbacks.recv_callback = scripted_recv_callback;
-  callbacks.on_invalid_frame_recv_callback = on_invalid_frame_recv_callback;
+  callbacks.on_invalid_frame_recv_callback = (nghttp2_on_invalid_frame_recv_callback)on_invalid_frame_recv_callback;
 
   user_data.df = &df;
   user_data.invalid_frame_recv_cb_called = 0;
@@ -2281,7 +2281,7 @@ void test_nghttp2_session_add_frame(void) {
 
   CU_ASSERT(0 == nghttp2_session_client_new(&session, &callbacks, &user_data));
 
-  item = mem->malloc(sizeof(nghttp2_outbound_item), NULL);
+  item = (nghttp2_outbound_item *)mem->malloc(sizeof(nghttp2_outbound_item), NULL);
 
   nghttp2_outbound_item_init(item);
 
@@ -2323,7 +2323,7 @@ void test_nghttp2_session_on_request_headers_received(void) {
   mem = nghttp2_mem_default();
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
   callbacks.on_begin_headers_callback = on_begin_headers_callback;
-  callbacks.on_invalid_frame_recv_callback = on_invalid_frame_recv_callback;
+  callbacks.on_invalid_frame_recv_callback = (nghttp2_on_invalid_frame_recv_callback)on_invalid_frame_recv_callback;
 
   nghttp2_session_server_new(&session, &callbacks, &user_data);
 
@@ -2515,7 +2515,7 @@ void test_nghttp2_session_on_response_headers_received(void) {
   mem = nghttp2_mem_default();
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
   callbacks.on_begin_headers_callback = on_begin_headers_callback;
-  callbacks.on_invalid_frame_recv_callback = on_invalid_frame_recv_callback;
+  callbacks.on_invalid_frame_recv_callback = (nghttp2_on_invalid_frame_recv_callback)on_invalid_frame_recv_callback;
 
   nghttp2_session_client_new(&session, &callbacks, &user_data);
   stream = open_sent_stream2(session, 1, NGHTTP2_STREAM_OPENING);
@@ -2545,7 +2545,7 @@ void test_nghttp2_session_on_headers_received(void) {
   mem = nghttp2_mem_default();
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
   callbacks.on_begin_headers_callback = on_begin_headers_callback;
-  callbacks.on_invalid_frame_recv_callback = on_invalid_frame_recv_callback;
+  callbacks.on_invalid_frame_recv_callback = (nghttp2_on_invalid_frame_recv_callback)on_invalid_frame_recv_callback;
 
   nghttp2_session_client_new(&session, &callbacks, &user_data);
   stream = open_sent_stream2(session, 1, NGHTTP2_STREAM_OPENED);
@@ -2612,7 +2612,7 @@ void test_nghttp2_session_on_push_response_headers_received(void) {
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
   callbacks.send_callback = null_send_callback;
   callbacks.on_begin_headers_callback = on_begin_headers_callback;
-  callbacks.on_invalid_frame_recv_callback = on_invalid_frame_recv_callback;
+  callbacks.on_invalid_frame_recv_callback = (nghttp2_on_invalid_frame_recv_callback)on_invalid_frame_recv_callback;
 
   nghttp2_session_client_new(&session, &callbacks, &user_data);
   stream = open_recv_stream2(session, 2, NGHTTP2_STREAM_RESERVED);
@@ -2682,7 +2682,7 @@ void test_nghttp2_session_on_priority_received(void) {
 
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
   callbacks.on_frame_recv_callback = on_frame_recv_callback;
-  callbacks.on_invalid_frame_recv_callback = on_invalid_frame_recv_callback;
+  callbacks.on_invalid_frame_recv_callback = (nghttp2_on_invalid_frame_recv_callback)on_invalid_frame_recv_callback;
 
   nghttp2_session_server_new(&session, &callbacks, &user_data);
   stream = open_recv_stream(session, 1);
@@ -2971,7 +2971,7 @@ void test_nghttp2_session_on_push_promise_received(void) {
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
   callbacks.send_callback = null_send_callback;
   callbacks.on_begin_headers_callback = on_begin_headers_callback;
-  callbacks.on_invalid_frame_recv_callback = on_invalid_frame_recv_callback;
+  callbacks.on_invalid_frame_recv_callback = (nghttp2_on_invalid_frame_recv_callback)on_invalid_frame_recv_callback;
 
   nghttp2_session_client_new(&session, &callbacks, &user_data);
 
@@ -3220,7 +3220,7 @@ void test_nghttp2_session_on_ping_received(void) {
 
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
   callbacks.on_frame_recv_callback = on_frame_recv_callback;
-  callbacks.on_invalid_frame_recv_callback = on_invalid_frame_recv_callback;
+  callbacks.on_invalid_frame_recv_callback = (nghttp2_on_invalid_frame_recv_callback)on_invalid_frame_recv_callback;
 
   nghttp2_session_client_new(&session, &callbacks, &user_data);
   nghttp2_frame_ping_init(&frame.ping, NGHTTP2_FLAG_ACK, opaque_data);
@@ -3277,8 +3277,8 @@ void test_nghttp2_session_on_goaway_received(void) {
 
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
   callbacks.on_frame_recv_callback = on_frame_recv_callback;
-  callbacks.on_invalid_frame_recv_callback = on_invalid_frame_recv_callback;
-  callbacks.on_stream_close_callback = on_stream_close_callback;
+  callbacks.on_invalid_frame_recv_callback = (nghttp2_on_invalid_frame_recv_callback)on_invalid_frame_recv_callback;
+  callbacks.on_stream_close_callback = (nghttp2_on_stream_close_callback)on_stream_close_callback;
 
   nghttp2_session_client_new(&session, &callbacks, &user_data);
 
@@ -3326,7 +3326,7 @@ void test_nghttp2_session_on_window_update_received(void) {
 
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
   callbacks.on_frame_recv_callback = on_frame_recv_callback;
-  callbacks.on_invalid_frame_recv_callback = on_invalid_frame_recv_callback;
+  callbacks.on_invalid_frame_recv_callback = (nghttp2_on_invalid_frame_recv_callback)on_invalid_frame_recv_callback;
   user_data.frame_recv_cb_called = 0;
   user_data.invalid_frame_recv_cb_called = 0;
 
@@ -3601,7 +3601,7 @@ void test_nghttp2_session_send_headers_start_stream(void) {
 
   nghttp2_session_client_new(&session, &callbacks, NULL);
 
-  item = mem->malloc(sizeof(nghttp2_outbound_item), NULL);
+  item = (nghttp2_outbound_item *)mem->malloc(sizeof(nghttp2_outbound_item), NULL);
 
   nghttp2_outbound_item_init(item);
 
@@ -3636,7 +3636,7 @@ void test_nghttp2_session_send_headers_reply(void) {
   CU_ASSERT(0 == nghttp2_session_server_new(&session, &callbacks, NULL));
   open_recv_stream2(session, 1, NGHTTP2_STREAM_OPENING);
 
-  item = mem->malloc(sizeof(nghttp2_outbound_item), NULL);
+  item = (nghttp2_outbound_item *)mem->malloc(sizeof(nghttp2_outbound_item), NULL);
 
   nghttp2_outbound_item_init(item);
 
@@ -3671,7 +3671,7 @@ void test_nghttp2_session_send_headers_frame_size_error(void) {
   for (i = 0; i < nnv; ++i) {
     nv[i].name = (uint8_t *)"header";
     nv[i].namelen = strlen((const char *)nv[i].name);
-    nv[i].value = mem->malloc(vallen + 1, NULL);
+    nv[i].value = (uint8_t *)mem->malloc(vallen + 1, NULL);
     memset(nv[i].value, '0' + (int)i, vallen);
     nv[i].value[vallen] = '\0';
     nv[i].valuelen = vallen;
@@ -3686,7 +3686,7 @@ void test_nghttp2_session_send_headers_frame_size_error(void) {
   nvlen = nnv;
   nghttp2_nv_array_copy(&nva, nv, nvlen, mem);
 
-  item = mem->malloc(sizeof(nghttp2_outbound_item), NULL);
+  item = (nghttp2_outbound_item *)mem->malloc(sizeof(nghttp2_outbound_item), NULL);
 
   nghttp2_outbound_item_init(item);
 
@@ -3730,7 +3730,7 @@ void test_nghttp2_session_send_headers_push_reply(void) {
   CU_ASSERT(0 == nghttp2_session_server_new(&session, &callbacks, NULL));
   open_sent_stream2(session, 2, NGHTTP2_STREAM_RESERVED);
 
-  item = mem->malloc(sizeof(nghttp2_outbound_item), NULL);
+  item = (nghttp2_outbound_item *)mem->malloc(sizeof(nghttp2_outbound_item), NULL);
 
   nghttp2_outbound_item_init(item);
 
@@ -3763,7 +3763,7 @@ void test_nghttp2_session_send_rst_stream(void) {
   nghttp2_session_client_new(&session, &callbacks, &user_data);
   open_sent_stream(session, 1);
 
-  item = mem->malloc(sizeof(nghttp2_outbound_item), NULL);
+  item = (nghttp2_outbound_item *)mem->malloc(sizeof(nghttp2_outbound_item), NULL);
 
   nghttp2_outbound_item_init(item);
 
@@ -3796,7 +3796,7 @@ void test_nghttp2_session_send_push_promise(void) {
   nghttp2_session_server_new(&session, &callbacks, &ud);
   open_recv_stream(session, 1);
 
-  item = mem->malloc(sizeof(nghttp2_outbound_item), NULL);
+  item = (nghttp2_outbound_item *)mem->malloc(sizeof(nghttp2_outbound_item), NULL);
 
   nghttp2_outbound_item_init(item);
 
@@ -3817,14 +3817,14 @@ void test_nghttp2_session_send_push_promise(void) {
   /* Received ENABLE_PUSH = 0 */
   iv.settings_id = NGHTTP2_SETTINGS_ENABLE_PUSH;
   iv.value = 0;
-  frame = mem->malloc(sizeof(nghttp2_frame), NULL);
+  frame = (nghttp2_frame *)mem->malloc(sizeof(nghttp2_frame), NULL);
   nghttp2_frame_settings_init(&frame->settings, NGHTTP2_FLAG_NONE,
                               dup_iv(&iv, 1), 1);
   nghttp2_session_on_settings_received(session, frame, 1);
   nghttp2_frame_settings_free(&frame->settings, mem);
   mem->free(frame, NULL);
 
-  item = mem->malloc(sizeof(nghttp2_outbound_item), NULL);
+  item = (nghttp2_outbound_item *)mem->malloc(sizeof(nghttp2_outbound_item), NULL);
 
   nghttp2_outbound_item_init(item);
 
@@ -3846,7 +3846,7 @@ void test_nghttp2_session_send_push_promise(void) {
   /* PUSH_PROMISE from client is error */
   nghttp2_session_client_new(&session, &callbacks, &ud);
   open_sent_stream(session, 1);
-  item = mem->malloc(sizeof(nghttp2_outbound_item), NULL);
+  item = (nghttp2_outbound_item *)mem->malloc(sizeof(nghttp2_outbound_item), NULL);
 
   nghttp2_outbound_item_init(item);
 
@@ -6262,7 +6262,7 @@ void test_nghttp2_session_on_stream_close(void) {
   nghttp2_stream *stream;
 
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
-  callbacks.on_stream_close_callback = on_stream_close_callback;
+  callbacks.on_stream_close_callback = (nghttp2_on_stream_close_callback) on_stream_close_callback;
   user_data.stream_close_cb_called = 0;
 
   nghttp2_session_client_new(&session, &callbacks, &user_data);
@@ -8441,7 +8441,7 @@ void test_nghttp2_session_graceful_shutdown(void) {
   memset(&callbacks, 0, sizeof(callbacks));
   callbacks.send_callback = null_send_callback;
   callbacks.on_frame_send_callback = on_frame_send_callback;
-  callbacks.on_stream_close_callback = on_stream_close_callback;
+  callbacks.on_stream_close_callback = (nghttp2_on_stream_close_callback) on_stream_close_callback;
 
   nghttp2_session_server_new(&session, &callbacks, &ud);
 
@@ -8796,7 +8796,7 @@ void test_nghttp2_session_reset_pending_headers(void) {
   callbacks.send_callback = null_send_callback;
   callbacks.on_frame_send_callback = on_frame_send_callback;
   callbacks.on_frame_not_send_callback = on_frame_not_send_callback;
-  callbacks.on_stream_close_callback = on_stream_close_callback;
+  callbacks.on_stream_close_callback = (nghttp2_on_stream_close_callback)on_stream_close_callback;
 
   nghttp2_session_client_new(&session, &callbacks, &ud);
 
@@ -9459,7 +9459,7 @@ static void check_nghttp2_http_recv_headers_ok(
   mem = nghttp2_mem_default();
   frame_pack_bufs_init(&bufs);
 
-  ud = session->user_data;
+  ud = (my_user_data *)session->user_data;
 
   if (stream_state != -1) {
     if (nghttp2_session_is_my_stream_id(session, stream_id)) {
@@ -9559,7 +9559,7 @@ void test_nghttp2_http_mandatory_headers(void) {
   memset(&callbacks, 0, sizeof(nghttp2_session_callbacks));
   callbacks.send_callback = null_send_callback;
   callbacks.on_frame_recv_callback = on_frame_recv_callback;
-  callbacks.on_invalid_frame_recv_callback = on_invalid_frame_recv_callback;
+  callbacks.on_invalid_frame_recv_callback = (nghttp2_on_invalid_frame_recv_callback)on_invalid_frame_recv_callback;
 
   nghttp2_session_client_new(&session, &callbacks, &ud);
 

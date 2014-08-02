@@ -357,7 +357,7 @@ static void print_errno(const char *prefix, int errnum) {
 static stream *stream_new(int32_t stream_id, connection *conn) {
   stream *strm;
 
-  strm = malloc(sizeof(stream));
+  strm = (stream *)malloc(sizeof(stream));
 
   strm->prev = strm->next = NULL;
   strm->method = NULL;
@@ -397,7 +397,7 @@ static connection *connection_new(int fd) {
   connection *conn;
   int rv;
 
-  conn = malloc(sizeof(connection));
+  conn = (connection *)malloc(sizeof(connection));
 
   rv = nghttp2_session_server_new(&conn->session, shared_callbacks, conn);
 
@@ -592,14 +592,14 @@ static int io_loop_run(io_loop *loop, server *serv _U_) {
     }
 
     for (ev = events, end = events + nev; ev != end; ++ev) {
-      evhn = ev->data.ptr;
+      evhn = (evhandle *)ev->data.ptr;
       evhn->handler(loop, ev->events, ev->data.ptr);
     }
   }
 }
 
 static int handle_timer(io_loop *loop _U_, uint32_t events _U_, void *ptr) {
-  timer *tmr = ptr;
+  timer *tmr = (timer *)ptr;
   int64_t buf;
   ssize_t nread;
 
@@ -615,7 +615,7 @@ static int handle_timer(io_loop *loop _U_, uint32_t events _U_, void *ptr) {
 
 static int handle_accept(io_loop *loop, uint32_t events _U_, void *ptr) {
   int acfd;
-  server *serv = ptr;
+  server *serv = (server *)ptr;
   int on = 1;
   socklen_t optlen = sizeof(on);
   int rv;
@@ -729,7 +729,7 @@ static ssize_t resbuf_read_callback(nghttp2_session *session _U_,
                                     size_t length, uint32_t *data_flags,
                                     nghttp2_data_source *source,
                                     void *user_data _U_) {
-  stream *strm = source->ptr;
+  stream *strm = (stream *)source->ptr;
   size_t left = (size_t)(strm->res_end - strm->res_begin);
   size_t nwrite = length < left ? length : left;
 
@@ -989,7 +989,7 @@ static int process_request(stream *strm, connection *conn) {
 static int on_begin_headers_callback(nghttp2_session *session,
                                      const nghttp2_frame *frame,
                                      void *user_data) {
-  connection *conn = user_data;
+  connection *conn = (connection *)user_data;
   stream *strm;
 
   if (frame->hd.type != NGHTTP2_HEADERS ||
@@ -1022,7 +1022,7 @@ static int on_header_callback(nghttp2_session *session,
     return 0;
   }
 
-  strm = nghttp2_session_get_stream_user_data(session, frame->hd.stream_id);
+  strm = (stream *)nghttp2_session_get_stream_user_data(session, frame->hd.stream_id);
 
   if (!strm) {
     return 0;
@@ -1071,7 +1071,7 @@ static int on_header_callback(nghttp2_session *session,
 
 static int on_frame_recv_callback(nghttp2_session *session,
                                   const nghttp2_frame *frame, void *user_data) {
-  connection *conn = user_data;
+  connection *conn = (connection *)user_data;
   stream *strm;
 
   if (frame->hd.type != NGHTTP2_HEADERS ||
@@ -1079,7 +1079,7 @@ static int on_frame_recv_callback(nghttp2_session *session,
     return 0;
   }
 
-  strm = nghttp2_session_get_stream_user_data(session, frame->hd.stream_id);
+  strm = (stream *)nghttp2_session_get_stream_user_data(session, frame->hd.stream_id);
 
   if (!strm) {
     return 0;
@@ -1103,7 +1103,7 @@ static int on_stream_close_callback(nghttp2_session *session, int32_t stream_id,
                                     void *user_data _U_) {
   stream *strm;
 
-  strm = nghttp2_session_get_stream_user_data(session, stream_id);
+  strm = (stream *)nghttp2_session_get_stream_user_data(session, stream_id);
 
   if (!strm) {
     return 0;
@@ -1117,7 +1117,7 @@ static int on_stream_close_callback(nghttp2_session *session, int32_t stream_id,
 static int on_frame_not_send_callback(nghttp2_session *session _U_,
                                       const nghttp2_frame *frame,
                                       int lib_error_code _U_, void *user_data) {
-  connection *conn = user_data;
+  connection *conn = (connection *)user_data;
 
   if (frame->hd.type != NGHTTP2_HEADERS) {
     return 0;
@@ -1218,7 +1218,7 @@ static int do_write(connection *conn) {
 }
 
 static int handle_connection(io_loop *loop, uint32_t events, void *ptr) {
-  connection *conn = ptr;
+  connection *conn = (connection *)ptr;
   int rv;
   uint32_t nextev = 0;
 

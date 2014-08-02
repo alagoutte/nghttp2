@@ -674,7 +674,7 @@ void test_nghttp2_hd_ringbuf_reserve(void) {
   nv.name = (uint8_t *)"a";
   nv.namelen = strlen((const char *)nv.name);
   nv.valuelen = 4;
-  nv.value = mem->malloc(nv.valuelen + 1, NULL);
+  nv.value = (uint8_t *)mem->malloc(nv.valuelen + 1, NULL);
   memset(nv.value, 0, nv.valuelen);
 
   nghttp2_hd_deflate_init2(&deflater, 8000, mem);

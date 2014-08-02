@@ -44,8 +44,8 @@
   do {                                                                         \
     size_t alloclen = sizeof(nghttp2_nv) * len;                                \
     const nghttp2_nv *sa = A, *sb = B;                                         \
-    nghttp2_nv *a = mem->malloc(alloclen, NULL);                               \
-    nghttp2_nv *b = mem->malloc(alloclen, NULL);                               \
+    nghttp2_nv *a = (nghttp2_nv *)mem->malloc(alloclen, NULL);                 \
+    nghttp2_nv *b = (nghttp2_nv *)mem->malloc(alloclen, NULL);                 \
     ssize_t i_;                                                                \
     memcpy(a, sa, alloclen);                                                   \
     memcpy(b, sb, alloclen);                                                   \

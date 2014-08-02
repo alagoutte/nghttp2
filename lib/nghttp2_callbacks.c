@@ -27,7 +27,7 @@
 #include <stdlib.h>
 
 int nghttp2_session_callbacks_new(nghttp2_session_callbacks **callbacks_ptr) {
-  *callbacks_ptr = calloc(1, sizeof(nghttp2_session_callbacks));
+  *callbacks_ptr = (nghttp2_session_callbacks *)calloc(1, sizeof(nghttp2_session_callbacks));
 
   if (*callbacks_ptr == NULL) {
     return NGHTTP2_ERR_NOMEM;

@@ -37,7 +37,7 @@ static uint8_t downcase(uint8_t c) {
 
 static int memieq(const void *a, const void *b, size_t n) {
   size_t i;
-  const uint8_t *aa = a, *bb = b;
+  const uint8_t *aa = (const uint8_t *)a, *bb = (const uint8_t *)b;
 
   for (i = 0; i < n; ++i) {
     if (downcase(aa[i]) != downcase(bb[i])) {

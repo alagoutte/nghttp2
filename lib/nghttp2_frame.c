@@ -201,7 +201,7 @@ void nghttp2_frame_altsvc_init(nghttp2_extension *frame, int32_t stream_id,
   nghttp2_frame_hd_init(&frame->hd, 2 + origin_len + field_value_len,
                         NGHTTP2_ALTSVC, NGHTTP2_FLAG_NONE, stream_id);
 
-  altsvc = frame->payload;
+  altsvc = (nghttp2_ext_altsvc *)frame->payload;
   altsvc->origin = origin;
   altsvc->origin_len = origin_len;
   altsvc->field_value = field_value;
@@ -211,7 +211,7 @@ void nghttp2_frame_altsvc_init(nghttp2_extension *frame, int32_t stream_id,
 void nghttp2_frame_altsvc_free(nghttp2_extension *frame, nghttp2_mem *mem) {
   nghttp2_ext_altsvc *altsvc;
 
-  altsvc = frame->payload;
+  altsvc = (nghttp2_ext_altsvc *)frame->payload;
   /* We use the same buffer for altsvc->origin and
      altsvc->field_value. */
   nghttp2_mem_free(mem, altsvc->origin);
@@ -464,8 +464,8 @@ size_t nghttp2_frame_pack_settings_payload(uint8_t *buf,
 }
 
 void nghttp2_frame_unpack_settings_payload(nghttp2_settings *frame,
-                                           nghttp2_settings_entry *iv,
-                                           size_t niv) {
+                                          nghttp2_settings_entry *iv,
+                                          size_t niv) {
   frame->iv = iv;
   frame->niv = niv;
 }
@@ -491,7 +491,7 @@ int nghttp2_frame_unpack_settings_payload2(nghttp2_settings_entry **iv_ptr,
     return 0;
   }
 
-  *iv_ptr =
+  *iv_ptr = (nghttp2_settings_entry *)
       nghttp2_mem_malloc(mem, (*niv_ptr) * sizeof(nghttp2_settings_entry));
 
   if (*iv_ptr == NULL) {
@@ -636,7 +636,7 @@ int nghttp2_frame_unpack_goaway_payload2(nghttp2_goaway *frame,
   if (!var_gift_payloadlen) {
     var_gift_payload = NULL;
   } else {
-    var_gift_payload = nghttp2_mem_malloc(mem, var_gift_payloadlen);
+    var_gift_payload = (uint8_t *)nghttp2_mem_malloc(mem, var_gift_payloadlen);
 
     if (var_gift_payload == NULL) {
       return NGHTTP2_ERR_NOMEM;
@@ -683,7 +683,7 @@ int nghttp2_frame_pack_altsvc(nghttp2_bufs *bufs, nghttp2_extension *frame) {
   nghttp2_buf *buf;
   nghttp2_ext_altsvc *altsvc;
 
-  altsvc = frame->payload;
+  altsvc = (nghttp2_ext_altsvc *)frame->payload;
 
   buf = &bufs->head->buf;
 
@@ -714,7 +714,7 @@ void nghttp2_frame_unpack_altsvc_payload(nghttp2_extension *frame,
   nghttp2_ext_altsvc *altsvc;
   uint8_t *p;
 
-  altsvc = frame->payload;
+  altsvc = (nghttp2_ext_altsvc *)frame->payload;
   p = payload;
 
   altsvc->origin = p;
@@ -739,7 +739,7 @@ int nghttp2_frame_unpack_altsvc_payload2(nghttp2_extension *frame,
 
   origin_len = nghttp2_get_uint16(payload);
 
-  buf = nghttp2_mem_malloc(mem, payloadlen - 2);
+  buf = (uint8_t *)nghttp2_mem_malloc(mem, payloadlen - 2);
   if (!buf) {
     return NGHTTP2_ERR_NOMEM;
   }
@@ -760,7 +760,7 @@ nghttp2_settings_entry *nghttp2_frame_iv_copy(const nghttp2_settings_entry *iv,
     return NULL;
   }
 
-  iv_copy = nghttp2_mem_malloc(mem, len);
+  iv_copy = (nghttp2_settings_entry *)nghttp2_mem_malloc(mem, len);
 
   if (iv_copy == NULL) {
     return NULL;
@@ -855,7 +855,7 @@ int nghttp2_nv_array_copy(nghttp2_nv **nva_ptr, const nghttp2_nv *nva,
 
   buflen += sizeof(nghttp2_nv) * nvlen;
 
-  *nva_ptr = nghttp2_mem_malloc(mem, buflen);
+  *nva_ptr = (nghttp2_nv *)nghttp2_mem_malloc(mem, buflen);
 
   if (*nva_ptr == NULL) {
     return NGHTTP2_ERR_NOMEM;

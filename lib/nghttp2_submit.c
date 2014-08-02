@@ -79,7 +79,7 @@ static int32_t submit_headers_shared(nghttp2_session *session, uint8_t flags,
 
   mem = &session->mem;
 
-  item = nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
+  item = (nghttp2_outbound_item *)nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
   if (item == NULL) {
     rv = NGHTTP2_ERR_NOMEM;
     goto fail;
@@ -240,7 +240,7 @@ int nghttp2_submit_priority(nghttp2_session *session, uint8_t flags _U_,
 
   nghttp2_priority_spec_normalize_weight(&copy_pri_spec);
 
-  item = nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
+  item = (nghttp2_outbound_item *)nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
 
   if (item == NULL) {
     return NGHTTP2_ERR_NOMEM;
@@ -328,7 +328,7 @@ int32_t nghttp2_submit_push_promise(nghttp2_session *session, uint8_t flags _U_,
     return NGHTTP2_ERR_STREAM_ID_NOT_AVAILABLE;
   }
 
-  item = nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
+  item = (nghttp2_outbound_item *)nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
   if (item == NULL) {
     return NGHTTP2_ERR_NOMEM;
   }
@@ -441,7 +441,7 @@ int nghttp2_submit_altsvc(nghttp2_session *session, uint8_t flags _U_,
     return NGHTTP2_ERR_INVALID_ARGUMENT;
   }
 
-  buf = nghttp2_mem_malloc(mem, origin_len + field_value_len + 2);
+  buf = (uint8_t *)nghttp2_mem_malloc(mem, origin_len + field_value_len + 2);
   if (buf == NULL) {
     return NGHTTP2_ERR_NOMEM;
   }
@@ -460,7 +460,7 @@ int nghttp2_submit_altsvc(nghttp2_session *session, uint8_t flags _U_,
   }
   *p++ = '\0';
 
-  item = nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
+  item = (nghttp2_outbound_item *)nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
   if (item == NULL) {
     rv = NGHTTP2_ERR_NOMEM;
     goto fail_item_malloc;
@@ -577,7 +577,7 @@ int nghttp2_submit_data(nghttp2_session *session, uint8_t flags,
     return NGHTTP2_ERR_INVALID_ARGUMENT;
   }
 
-  item = nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
+  item = (nghttp2_outbound_item *)nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
   if (item == NULL) {
     return NGHTTP2_ERR_NOMEM;
   }
@@ -633,7 +633,7 @@ int nghttp2_submit_extension(nghttp2_session *session, uint8_t type,
     return NGHTTP2_ERR_INVALID_STATE;
   }
 
-  item = nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
+  item = (nghttp2_outbound_item *)nghttp2_mem_malloc(mem, sizeof(nghttp2_outbound_item));
   if (item == NULL) {
     return NGHTTP2_ERR_NOMEM;
   }

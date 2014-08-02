@@ -131,13 +131,13 @@ void nva_out_reset(nva_out *out, nghttp2_mem *mem) {
 void add_out(nva_out *out, nghttp2_nv *nv, nghttp2_mem *mem) {
   nghttp2_nv *onv = &out->nva[out->nvlen];
   if (nv->namelen) {
-    onv->name = mem->malloc(nv->namelen, NULL);
+    onv->name = (uint8_t *)mem->malloc(nv->namelen, NULL);
     memcpy(onv->name, nv->name, nv->namelen);
   } else {
     onv->name = NULL;
   }
   if (nv->valuelen) {
-    onv->value = mem->malloc(nv->valuelen, NULL);
+    onv->value = (uint8_t *)mem->malloc(nv->valuelen, NULL);
     memcpy(onv->value, nv->value, nv->valuelen);
   } else {
     onv->value = NULL;
@@ -305,7 +305,7 @@ nghttp2_stream *open_stream_with_dep_excl(nghttp2_session *session,
 nghttp2_outbound_item *create_data_ob_item(nghttp2_mem *mem) {
   nghttp2_outbound_item *item;
 
-  item = mem->malloc(sizeof(nghttp2_outbound_item), NULL);
+  item = (nghttp2_outbound_item *)mem->malloc(sizeof(nghttp2_outbound_item), NULL);
   memset(item, 0, sizeof(nghttp2_outbound_item));
 
   return item;

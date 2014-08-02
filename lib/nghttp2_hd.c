@@ -604,7 +604,7 @@ static int hd_ringbuf_init(nghttp2_hd_ringbuf *ringbuf, size_t bufsize,
   size_t size;
   for (size = 1; size < bufsize; size <<= 1)
     ;
-  ringbuf->buffer = nghttp2_mem_malloc(mem, sizeof(nghttp2_hd_entry *) * size);
+  ringbuf->buffer = (nghttp2_hd_entry **)nghttp2_mem_malloc(mem, sizeof(nghttp2_hd_entry *) * size);
   if (ringbuf->buffer == NULL) {
     return NGHTTP2_ERR_NOMEM;
   }
@@ -631,7 +631,7 @@ static int hd_ringbuf_reserve(nghttp2_hd_ringbuf *ringbuf, size_t bufsize,
   }
   for (size = 1; size < bufsize; size <<= 1)
     ;
-  buffer = nghttp2_mem_malloc(mem, sizeof(nghttp2_hd_entry *) * size);
+  buffer = (nghttp2_hd_entry **)nghttp2_mem_malloc(mem, sizeof(nghttp2_hd_entry *) * size);
   if (buffer == NULL) {
     return NGHTTP2_ERR_NOMEM;
   }
@@ -1144,7 +1144,7 @@ static int add_hd_table_incremental(nghttp2_hd_context *context,
     return 0;
   }
 
-  new_ent = nghttp2_mem_malloc(mem, sizeof(nghttp2_hd_entry));
+  new_ent = (nghttp2_hd_entry *)nghttp2_mem_malloc(mem, sizeof(nghttp2_hd_entry));
   if (new_ent == NULL) {
     return NGHTTP2_ERR_NOMEM;
   }
@@ -1577,7 +1577,7 @@ int nghttp2_hd_deflate_new2(nghttp2_hd_deflater **deflater_ptr,
     mem = nghttp2_mem_default();
   }
 
-  deflater = nghttp2_mem_malloc(mem, sizeof(nghttp2_hd_deflater));
+  deflater = (nghttp2_hd_deflater *)nghttp2_mem_malloc(mem, sizeof(nghttp2_hd_deflater));
 
   if (deflater == NULL) {
     return NGHTTP2_ERR_NOMEM;
@@ -2255,7 +2255,7 @@ int nghttp2_hd_inflate_new2(nghttp2_hd_inflater **inflater_ptr,
     mem = nghttp2_mem_default();
   }
 
-  inflater = nghttp2_mem_malloc(mem, sizeof(nghttp2_hd_inflater));
+  inflater = (nghttp2_hd_inflater *)nghttp2_mem_malloc(mem, sizeof(nghttp2_hd_inflater));
 
   if (inflater == NULL) {
     return NGHTTP2_ERR_NOMEM;
