@@ -114,7 +114,7 @@ extern "C" {
 
 struct nghttp2_session;
 /**
- * @struct
+ * @typedef
  *
  * The primary structure to hold the resources needed for a HTTP/2
  * session.  The details of this structure are intentionally hidden
@@ -438,7 +438,7 @@ typedef struct {
 struct nghttp2_rcbuf;
 
 /**
- * @struct
+ * @typedef
  *
  * The object representing reference counted buffer.  The details of
  * this structure are intentionally hidden from the public API.
@@ -1905,7 +1905,7 @@ typedef int (*nghttp2_error_callback)(nghttp2_session *session, const char *msg,
 struct nghttp2_session_callbacks;
 
 /**
- * @struct
+ * @typedef
  *
  * Callback functions for :type:`nghttp2_session`.  The details of
  * this structure are intentionally hidden from the public API.
@@ -2245,7 +2245,7 @@ typedef struct {
 struct nghttp2_option;
 
 /**
- * @struct
+ * @typedef
  *
  * Configuration options for :type:`nghttp2_session`.  The details of
  * this structure are intentionally hidden from the public API.
@@ -4331,7 +4331,7 @@ NGHTTP2_EXTERN int nghttp2_check_header_value(const uint8_t *value, size_t len);
 struct nghttp2_hd_deflater;
 
 /**
- * @struct
+ * @typedef
  *
  * HPACK deflater object.
  */
@@ -4495,7 +4495,7 @@ nghttp2_hd_deflate_get_max_dynamic_table_size(nghttp2_hd_deflater *deflater);
 struct nghttp2_hd_inflater;
 
 /**
- * @struct
+ * @typedef
  *
  * HPACK inflater object.
  */
@@ -4815,7 +4815,7 @@ nghttp2_hd_inflate_get_max_dynamic_table_size(nghttp2_hd_inflater *inflater);
 struct nghttp2_stream;
 
 /**
- * @struct
+ * @typedef
  *
  * The structure to represent HTTP/2 stream.  The details of this
  * structure are intentionally hidden from the public API.
