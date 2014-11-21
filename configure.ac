@@ -721,6 +721,7 @@ if test "x$werror" != "xno"; then
     AX_CHECK_COMPILE_FLAG([-Wredundant-decls], [CFLAGS="$CFLAGS -Wredundant-decls"])
     # Only work with Clang for the moment
     AX_CHECK_COMPILE_FLAG([-Wheader-guard], [CFLAGS="$CFLAGS -Wheader-guard"])
+    AX_CHECK_COMPILE_FLAG([-Wdocumentation], [CFLAGS="$CFLAGS -Wdocumentation"])
 
     # This is required because we pass format string as "const char*.
     AX_CHECK_COMPILE_FLAG([-Wno-format-nonliteral], [CFLAGS="$CFLAGS -Wno-format-nonliteral"])
