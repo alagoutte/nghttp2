@@ -35,8 +35,8 @@ addons:
     - cmake-data
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update > /dev/null; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install libxml2; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew link libxml2; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install libxml2 gnu-sed; fi
+ # - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew link libxml2; fi
   - $CC --version
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - $CC --version
