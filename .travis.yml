@@ -7,7 +7,7 @@ compiler:
   - clang
   - gcc
 os:
-  - linux
+#  - linux
   - osx
 sudo: false
 addons:
