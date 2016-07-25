@@ -6,6 +6,9 @@ language: cpp
 compiler:
   - clang
   - gcc
+os:
+  - linux
+  - osx
 sudo: false
 addons:
   apt:
@@ -31,6 +34,8 @@ addons:
     - cmake
     - cmake-data
 before_install:
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update > /dev/null; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install libxml2; fi
   - $CC --version
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - $CC --version
