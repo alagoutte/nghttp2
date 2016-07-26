@@ -56,8 +56,8 @@ before_script:
   # Now build nghttp2
   - if [ "$CI_BUILD" = "autotools" ]; then autoreconf -i; fi
   - git submodule update --init
-  - if [ "$CI_BUILD" = "autotools" ]; then ./configure --enable-werror --with-mruby --with-neverbleed "; fi
-  - if [ "$CI_BUILD" = "cmake" ]; then cmake -DENABLE_WERROR=1 -DWITH_MRUBY=1 -DWITH_NEVERBLEED=1"; fi
+  - if [ "$CI_BUILD" = "autotools" ]; then ./configure --enable-werror --with-mruby --with-neverbleed; fi
+  - if [ "$CI_BUILD" = "cmake" ]; then cmake -DENABLE_WERROR=1 -DWITH_MRUBY=1 -DWITH_NEVERBLEED=1; fi
 script:
   - make
   - make check
