@@ -36,7 +36,7 @@ addons:
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update > /dev/null; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install automake autoconf libtool libxml2 gnu-sed; fi
- # - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew link libxml2; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew link libxml2; fi
   - $CC --version
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - $CC --version
@@ -48,10 +48,10 @@ before_script:
   - cd third-party
   - git clone https://github.com/tatsuhiro-t/spdylay.git
   - cd spdylay
-  - autoreconf -i
-  - ./configure --disable-src --disable-examples
-  - make check
-  - export SPDYLAY_HOME=$PWD
+ # - autoreconf -i
+ # - ./configure --disable-src --disable-examples
+ # - make check
+ # - export SPDYLAY_HOME=$PWD
   - cd ../..
   # Now build nghttp2
   - if [ "$CI_BUILD" = "autotools" ]; then autoreconf -i; fi
