@@ -333,6 +333,7 @@ else()
     -Wall
     -Wextra
     -Wmissing-prototypes
+    -Wdocumentation
     -Wstrict-prototypes
     -Wmissing-declarations
     -Wpointer-arith
